@@ -18,8 +18,14 @@ public class TaskController {
 
     @GetMapping
     public List<Task> getAllTasks() {
-        System.out.println("Fetching all tasks");
+        System.out.println("GET /api/tasks - Fetching all tasks");
         return taskService.getAllTasks();
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<String> getStatus() {
+        System.out.println("GET /api/tasks/status - Server is UP");
+        return ResponseEntity.ok("Server is UP and running!");
     }
 
     @GetMapping("/{id}")
