@@ -1,0 +1,87 @@
+<div class="container">
+  <header>
+    <h1>Task Manager</h1>
+    <p class="subtitle">Stay organized and productive</p>
+  </header>
+
+  <main>
+    <!-- Error Message -->
+    <div class="error-alert" *ngIf="errorMessage">
+      {{ errorMessage }}
+      <button (click)="errorMessage = ''" class="close-btn">&times;</button>
+    </div>
+
+    <!-- Task Form -->
+    <section class="form-section">
+      <div class="card" *ngIf="!editingTask">
+        <h2>Create New Task</h2>
+        <div class="form-group">
+          <input type="text" [(ngModel)]="newTask.title" placeholder="What needs to be done?" class="input-title">
+          <textarea [(ngModel)]="newTask.description" placeholder="Add some details (optional)" class="input-desc"></textarea>
+          <button (click)="addTask()" class="btn-primary">Add Task</button>
+        </div>
+      </div>
+
+      <div class="card edit-mode" *ngIf="editingTask">
+        <h2>Edit Task</h2>
+        <div class="form-group">
+          <input type="text" [(ngModel)]="editingTask.title" placeholder="Title" class="input-title">
+          <textarea [(ngModel)]="editingTask.description" placeholder="Description" class="input-desc"></textarea>
+          <div class="select-group">
+            <label for="status">Status:</label>
+            <select id="status" [(ngModel)]="editingTask.status">
+              <option value="OPEN">Open</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+          <div class="button-group">
+            <button (click)="updateTask()" class="btn-success">Save Changes</button>
+            <button (click)="cancelEdit()" class="btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task List -->
+    <section class="list-section">
+      <div class="list-header">
+        <h2>Your Tasks <span>({{ tasks.length }})</span></h2>
+        <div *ngIf="loading" class="spinner"></div>
+      </div>
+
+      <div class="task-grid">
+        <div *ngFor="let task of tasks" class="task-card" [class.completed]="task.status === 'COMPLETED'">
+          <div class="task-status-indicator"></div>
+          <div class="task-content">
+            <div class="task-header">
+              <h3 [class.strikethrough]="task.status === 'COMPLETED'">{{ task.title }}</h3>
+              <span class="badge" [class.badge-completed]="task.status === 'COMPLETED'">
+                {{ task.status }}
+              </span>
+            </div>
+            <p class="task-description">{{ task.description || 'No description provided.' }}</p>
+            <div class="task-footer">
+              <span class="created-at">{{ task.createdAt | date:'short' }}</span>
+              <div class="actions">
+                <button (click)="toggleStatus(task)" [title]="task.status === 'OPEN' ? 'Complete' : 'Reopen'" class="btn-icon">
+                  <i class="icon" [class.icon-check]="task.status === 'OPEN'" [class.icon-undo]="task.status === 'COMPLETED'"></i>
+                </button>
+                <button (click)="startEdit(task)" title="Edit" class="btn-icon">
+                  <i class="icon icon-edit"></i>
+                </button>
+                <button (click)="deleteTask(task.id)" title="Delete" class="btn-icon btn-danger">
+                  <i class="icon icon-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="tasks.length === 0 && !loading" class="empty-state">
+           <div class="empty-icon">📝</div>
+           <p>No tasks yet. Start by adding one above!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
