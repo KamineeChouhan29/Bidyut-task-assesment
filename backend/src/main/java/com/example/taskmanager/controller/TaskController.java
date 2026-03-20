@@ -11,9 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = { "http://localhost:4200",
-        "https://bidyut-task-assesment.vercel.app" }, allowedHeaders = "*", methods = { RequestMethod.GET,
-                RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.OPTIONS })
 @RequiredArgsConstructor
 public class TaskController {
 
